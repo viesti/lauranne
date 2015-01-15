@@ -8,21 +8,32 @@
             [ring.middleware.reload :as reload]
             [environ.core :refer [env]]
             [org.httpkit.server :refer [run-server]]
-            [ring.middleware.json :refer [wrap-json-response]]
-            [ring.util.response :refer [response]]))
+            [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
+            [ring.util.response :refer [response]]
+            [clj-http.client :as client]))
 
 (deftemplate page
   (io/resource "index.html") [] [:body] (if is-dev? inject-devmode-html identity))
 
-(defn register [visitor] 
+(defn register [visitor]
   (print "register:\n" visitor)
    {:status 200})
+
+(defn say [body]
+  (println body)
+  (client/post "http://192.168.103.34:3000/say" {:content-type :json :body {:message "moi"}})
+  {:status 200})
 
 (defroutes routes
   (resources "/")
   (resources "/react" {:root "react"})
   (GET "/*" req (page))
-  (POST "/register" [visitor] (register visitor)))
+  (POST "/register" [visitor] (register visitor))
+  (-> (POST "/say" {body :body}
+        (say body))
+      wrap-json-response
+      wrap-json-body)
+  (GET "/*" req (page)))
 
 (def http-handler
   (if is-dev?
