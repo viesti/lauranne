@@ -10,7 +10,8 @@
             [org.httpkit.server :refer [run-server]]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
             [ring.util.response :refer [response]]
-            [clj-http.client :as client]))
+            [clj-http.client :as client]
+            [cheshire.core :as json]))
 
 (deftemplate page
   (io/resource "index.html") [] [:body] (if is-dev? inject-devmode-html identity))
@@ -19,9 +20,9 @@
   (print "register:\n" visitor)
    {:status 200})
 
-(defn say [body]
-  (println body)
-  (client/post "http://192.168.103.34:3000/say" {:content-type :json :body {:message "moi"}})
+(defn say [{:keys [body]}]
+  (println (get body "message"))
+  (client/post "http://192.168.103.34:3000/say" {:content-type :json :body (json/generate-string {:message (get body "message")})})
   {:status 200})
 
 (defroutes routes
@@ -29,8 +30,8 @@
   (resources "/react" {:root "react"})
   (GET "/*" req (page))
   (POST "/register" [visitor] (register visitor))
-  (-> (POST "/say" {body :body}
-        (say body))
+  (-> (POST "/say" req
+        (say req))
       wrap-json-response
       wrap-json-body)
   (GET "/*" req (page)))
