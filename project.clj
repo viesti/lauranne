@@ -18,7 +18,9 @@
                  [weasel "0.4.0-SNAPSHOT"]
                  [leiningen "2.5.0"]
                  [http-kit "2.1.19"]
-                 [prismatic/om-tools "0.3.3"]]
+                 [prismatic/om-tools "0.3.3"]
+                 [clj-http "1.0.1"]
+                 [ring/ring-json "0.3.1"]]
 
   :plugins [[lein-cljsbuild "1.0.3"]
             [lein-environ "1.0.0"]]
