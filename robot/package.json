@@ -1,0 +1,15 @@
+{
+  "name": "robot",
+  "version": "0.0.0",
+  "description": "",
+  "main": "robot.js",
+  "dependencies": {
+    "ev3dev": "^0.9.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
