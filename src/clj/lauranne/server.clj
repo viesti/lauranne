@@ -14,10 +14,15 @@
 (deftemplate page
   (io/resource "index.html") [] [:body] (if is-dev? inject-devmode-html identity))
 
+(defn register [visitor] 
+  (print "register:\n" visitor)
+   {:status 200})
+
 (defroutes routes
   (resources "/")
   (resources "/react" {:root "react"})
-  (GET "/*" req (page)))
+  (GET "/*" req (page))
+  (POST "/register" [visitor] (register visitor)))
 
 (def http-handler
   (if is-dev?
