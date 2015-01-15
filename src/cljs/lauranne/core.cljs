@@ -1,7 +1,6 @@
 (ns lauranne.core
   (:require [om.core :as om :include-macros true]
-            [om-tools.dom :as dom :include-macros true]
-            [om-tools.core :refer-macros [defcomponent]]))
+            [om.dom :as dom :include-macros true]))
 
 (defonce app-state (atom {:text "Hello Chestnut!"}))
 
@@ -11,6 +10,19 @@
       (reify
         om/IRender
         (render [_]
-          (dom/h1 (:text app)))))
+          (dom/div nil
+            (dom/h1 nil (:text app))
+            (dom/ul nil
+              (dom/li nil
+                (dom/label nil "Nimi: ")
+                (dom/input #js {}))
+              (dom/li nil
+                (dom/label nil "Yritys: ")
+                (dom/input #js {}))
+              (dom/li nil
+                (dom/label nil "Isäntä: ")
+                (dom/input #js {}))
+              (dom/li nil
+                (dom/input #js {:type "button" :value "Kirjaudu"})))))))
     app-state
     {:target (. js/document (getElementById "app"))}))
