@@ -21,14 +21,22 @@
 
 (defn register [{:keys [body] :as req}]
   (let [db (mg/get-db conn "test")
-        visitor (json/parse-stream (clojure.java.io/reader body))]
+        visitor body
+        message (str "Tervetuloa " (get visitor "name"))]
     (println "registering:" visitor)
-    (mc/insert db "visitors" visitor))
+    (mc/insert db "visitors" visitor)
+    (client/post (str "http://" (System/getenv "ROBOT_IP") ":3000/say")
+                 {:content-type :json
+                  :throw-exceptions false
+                  :body (json/generate-string {:message message})}))
    {:status 201})
 
 (defn say [{:keys [body]}]
-  (println (get body "message"))
-  (client/post "http://192.168.103.34:3000/say" {:content-type :json :body (json/generate-string {:message (get body "message")})})
+  (println "Greeting:" (get body "message"))
+  (client/post (str "http://" (System/getenv "ROBOT_IP") ":3000/say")
+               {:content-type :json
+                :throw-exceptions false
+                :body (json/generate-string {:message (get body "message")})})
   {:status 200})
 
 (defroutes app
