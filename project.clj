@@ -21,7 +21,8 @@
                  [prismatic/om-tools "0.3.3"]
                  [clj-http "1.0.1"]
                  [ring/ring-json "0.3.1"]
-                 [cheshire "5.4.0"]]
+                 [cheshire "5.4.0"]
+                 [com.novemberain/monger "2.0.0"]]
 
   :plugins [[lein-cljsbuild "1.0.3"]
             [lein-environ "1.0.0"]]
