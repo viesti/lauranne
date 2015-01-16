@@ -28,7 +28,13 @@
     (client/post (str "http://" (System/getenv "ROBOT_IP") ":3000/say")
                  {:content-type :json
                   :throw-exceptions false
-                  :body (json/generate-string {:message message})}))
+                  :socket-timeout 1000
+                  :conn-timeout 1000
+                  :body (json/generate-string {:message message})})
+    (client/post (str "http://" (System/getenv "ROBOT_IP") ":3000/greet")
+                 {:content-type :json
+                  :throw-exceptions false
+                  :body ""}))
    {:status 201})
 
 (defn say [{:keys [body]}]
